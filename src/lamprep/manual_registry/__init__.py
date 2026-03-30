@@ -6,23 +6,22 @@ from lamprep.manual_registry.v29Aug2024 import REGISTRY as REGISTRY_29AUG2024
 
 __all__ = [
     "ManualRegistry",
-    "REGISTRIES",
     "get_supported_versions",
     "get_registry",
 ]
 
-REGISTRIES: dict[str, ManualRegistry] = {
+_REGISTRIES: dict[str, ManualRegistry] = {
     "29Aug2024": REGISTRY_29AUG2024,
     "11Feb2026": REGISTRY_11FEB2026,
 }
 
 
 def get_supported_versions() -> list[str]:
-    return list(REGISTRIES)
+    return list(_REGISTRIES)
 
 
 def get_registry(version: str) -> ManualRegistry:
     try:
-        return REGISTRIES[version]
+        return _REGISTRIES[version]
     except KeyError as exc:
         raise ValueError(f"Unsupported LAMMPS version: {version}") from exc

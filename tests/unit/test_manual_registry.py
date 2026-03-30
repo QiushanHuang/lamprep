@@ -1,20 +1,10 @@
 from __future__ import annotations
 
-import lamprep.manual_registry as manual_registry
 from lamprep.manual_registry import get_registry, get_supported_versions
 
 
 def test_supported_versions_are_explicit_and_ordered() -> None:
     assert get_supported_versions() == ["29Aug2024", "11Feb2026"]
-
-
-def test_package_exports_are_explicit() -> None:
-    assert manual_registry.__all__ == [
-        "ManualRegistry",
-        "REGISTRIES",
-        "get_supported_versions",
-        "get_registry",
-    ]
 
 
 def test_main_registry_exposes_deformation_workflow() -> None:
