@@ -56,7 +56,7 @@ class SimulationSpec:
             "boundary": self.boundary,
             "atom_style": self.atom_style,
             "structure_reference": self.structure_reference,
-            "create_box": dict(self.create_box),
+            "create_box": copy.deepcopy(self.create_box),
             "force_field": {
                 "style": self.force_field.style,
                 "coefficients": list(self.force_field.coefficients),
@@ -70,7 +70,7 @@ class SimulationSpec:
                     "temperature_stop": stage.temperature_stop,
                     "pressure_start": stage.pressure_start,
                     "pressure_stop": stage.pressure_stop,
-                    "extras": dict(stage.extras),
+                    "extras": copy.deepcopy(stage.extras),
                 }
                 for stage in self.run_stages
             ],
@@ -96,7 +96,7 @@ class SimulationSpec:
             boundary=payload["boundary"],
             atom_style=payload["atom_style"],
             structure_reference=payload.get("structure_reference"),
-            create_box=dict(payload.get("create_box", {})),
+            create_box=copy.deepcopy(payload.get("create_box", {})),
             force_field=ForceFieldSpec(
                 style=force_field["style"],
                 coefficients=list(force_field["coefficients"]),

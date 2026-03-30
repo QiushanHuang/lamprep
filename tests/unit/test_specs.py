@@ -50,6 +50,10 @@ def test_simulation_spec_json_round_trip_and_defensive_copy() -> None:
         boundary="p p p",
         atom_style="atomic",
         structure_reference="system.data",
+        create_box={
+            "padding": 2.0,
+            "regions": [{"name": "core", "atoms": [1, 2, 3]}],
+        },
         force_field=ForceFieldSpec(
             style="eam/alloy",
             coefficients=["* * Ni.eam.alloy Ni"],
@@ -61,7 +65,10 @@ def test_simulation_spec_json_round_trip_and_defensive_copy() -> None:
                 timestep=0.001,
                 temperature_start=300.0,
                 temperature_stop=300.0,
-                extras={"temperature_damp": 0.1},
+                extras={
+                    "temperature_damp": 0.1,
+                    "thermostat": {"chain": [1, 2, 3]},
+                },
             )
         ],
         outputs=OutputSpec(
@@ -81,9 +88,25 @@ def test_simulation_spec_json_round_trip_and_defensive_copy() -> None:
     copied = SimulationSpec.from_dict(payload)
 
     payload["force_field"]["coefficients"].append("new-coefficient")
-    payload["run_stages"][0]["extras"]["temperature_damp"] = 0.2
+    payload["run_stages"][0]["extras"]["thermostat"]["chain"].append(4)
+    payload["create_box"]["regions"][0]["atoms"].append(4)
     payload["outputs"]["dump_fields"].append("vx")
 
     assert copied.force_field.coefficients == ["* * Ni.eam.alloy Ni"]
-    assert copied.run_stages[0].extras == {"temperature_damp": 0.1}
+    assert copied.run_stages[0].extras == {
+        "temperature_damp": 0.1,
+        "thermostat": {"chain": [1, 2, 3]},
+    }
     assert copied.outputs.dump_fields == ["id", "type", "x", "y", "z"]
+    assert copied.create_box == {
+        "padding": 2.0,
+        "regions": [{"name": "core", "atoms": [1, 2, 3]}],
+    }
+    assert spec.create_box == {
+        "padding": 2.0,
+        "regions": [{"name": "core", "atoms": [1, 2, 3]}],
+    }
+    assert spec.run_stages[0].extras == {
+        "temperature_damp": 0.1,
+        "thermostat": {"chain": [1, 2, 3]},
+    }
