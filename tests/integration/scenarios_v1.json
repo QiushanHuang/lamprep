@@ -1,0 +1,45 @@
+[
+  {
+    "id": "lj_minimize_from_prompt",
+    "type": "supported",
+    "prompt": "Create a LAMMPS input for a Lennard-Jones atomic system energy minimization using lj units and periodic boundaries.",
+    "expected_workflow": "minimize",
+    "required_followups": [],
+    "expected_commands": ["units", "atom_style", "pair_style", "pair_coeff", "minimize", "thermo"],
+    "notes": "Covers the simplest supported atomic path."
+  },
+  {
+    "id": "eam_nvt_missing_pair_coeff_details",
+    "type": "supported",
+    "prompt": "Set up an NVT equilibration for an EAM metal system at 300 K.",
+    "expected_workflow": "equilibrate_nvt",
+    "required_followups": ["lammps_version", "structure_source", "pair_coeff_details", "timestep", "run_length"],
+    "expected_commands": ["units", "read_data", "pair_style", "pair_coeff", "fix", "run"],
+    "notes": "Confirms clarification behavior for incomplete materials prompts."
+  },
+  {
+    "id": "cooling_schedule_from_prompt",
+    "type": "supported",
+    "prompt": "Cool an atomic system from 1000 K to 300 K with NPT dynamics.",
+    "expected_workflow": "cool",
+    "required_followups": ["lammps_version", "structure_source", "force_field", "pressure_target", "timestep", "run_length"],
+    "expected_commands": ["fix", "run", "thermo"],
+    "notes": "Exercises temperature-ramp handling."
+  },
+  {
+    "id": "tensile_deformation_missing_axis_and_rate",
+    "type": "supported",
+    "prompt": "Prepare a tensile deformation simulation for a metal sample after equilibration.",
+    "expected_workflow": "deform_tensile",
+    "required_followups": ["lammps_version", "structure_source", "force_field", "deformation_axis", "strain_rate", "equilibration_conditions"],
+    "expected_commands": ["fix", "run", "dump"],
+    "notes": "Confirms the tool asks for the minimum required deformation details."
+  },
+  {
+    "id": "bonded_molecular_request_rejected",
+    "type": "unsupported",
+    "prompt": "Generate a bonded molecular LAMMPS setup with bond_style harmonic and angle_style charmm.",
+    "expected_error": "bonded molecular force fields are out of scope for v1",
+    "notes": "Ensures the v1 scope boundary is enforced."
+  }
+]

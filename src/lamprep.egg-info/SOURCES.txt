@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/lamprep/__init__.py
+src/lamprep/cli.py
+src/lamprep.egg-info/PKG-INFO
+src/lamprep.egg-info/SOURCES.txt
+src/lamprep.egg-info/dependency_links.txt
+src/lamprep.egg-info/entry_points.txt
+src/lamprep.egg-info/requires.txt
+src/lamprep.egg-info/top_level.txt

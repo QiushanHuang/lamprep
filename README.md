@@ -1,0 +1,32 @@
+# lamprep
+
+`lamprep` is a Python library and CLI for generating validated LAMMPS input scripts from structured requests or natural-language prompts.
+
+## Current status
+
+This repository currently contains:
+
+- the initial design spec
+- a minimal Python package scaffold
+- a human-verification test plan draft
+- integration test scenarios derived from the approved design
+
+Implementation has not started yet. The design spec is the current source of truth for scope and architecture.
+
+## Repository layout
+
+- `docs/superpowers/specs/`: approved design documents
+- `docs/test-plans/`: human-review and verification plans
+- `src/lamprep/`: Python package source
+- `tests/integration/`: integration fixtures and test scaffolding
+
+## Development
+
+Create a virtual environment and install the package in editable mode:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+pytest
+```
