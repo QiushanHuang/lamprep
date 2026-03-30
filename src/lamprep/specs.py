@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 from dataclasses import dataclass, field
 import json
 from typing import Any
@@ -85,6 +86,7 @@ class SimulationSpec:
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> "SimulationSpec":
+        force_field = payload["force_field"]
         return cls(
             lammps_version=payload["lammps_version"],
             workflow_type=payload["workflow_type"],
@@ -95,9 +97,28 @@ class SimulationSpec:
             atom_style=payload["atom_style"],
             structure_reference=payload.get("structure_reference"),
             create_box=dict(payload.get("create_box", {})),
-            force_field=ForceFieldSpec(**payload["force_field"]),
-            run_stages=[RunStage(**stage) for stage in payload["run_stages"]],
-            outputs=OutputSpec(**payload["outputs"]),
+            force_field=ForceFieldSpec(
+                style=force_field["style"],
+                coefficients=list(force_field["coefficients"]),
+            ),
+            run_stages=[
+                RunStage(
+                    stage_type=stage["stage_type"],
+                    steps=stage["steps"],
+                    timestep=stage["timestep"],
+                    temperature_start=stage.get("temperature_start"),
+                    temperature_stop=stage.get("temperature_stop"),
+                    pressure_start=stage.get("pressure_start"),
+                    pressure_stop=stage.get("pressure_stop"),
+                    extras=copy.deepcopy(stage.get("extras", {})),
+                )
+                for stage in payload["run_stages"]
+            ],
+            outputs=OutputSpec(
+                thermo_every=payload["outputs"]["thermo_every"],
+                dump_every=payload["outputs"].get("dump_every"),
+                dump_fields=list(payload["outputs"].get("dump_fields", [])),
+            ),
         )
 
     @classmethod
