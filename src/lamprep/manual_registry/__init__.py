@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 from lamprep.manual_registry.base import ManualRegistry
 from lamprep.manual_registry.v11Feb2026 import REGISTRY as REGISTRY_11FEB2026
 from lamprep.manual_registry.v29Aug2024 import REGISTRY as REGISTRY_29AUG2024
@@ -22,6 +24,12 @@ def get_supported_versions() -> list[str]:
 
 def get_registry(version: str) -> ManualRegistry:
     try:
-        return _REGISTRIES[version]
+        registry = _REGISTRIES[version]
     except KeyError as exc:
         raise ValueError(f"Unsupported LAMMPS version: {version}") from exc
+
+    return replace(
+        registry,
+        supported_workflows=dict(registry.supported_workflows),
+        citations=dict(registry.citations),
+    )

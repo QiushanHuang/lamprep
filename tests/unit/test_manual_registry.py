@@ -25,3 +25,14 @@ def test_unsupported_version_raises_value_error() -> None:
         assert str(exc) == "Unsupported LAMMPS version: unknown"
     else:
         raise AssertionError("expected ValueError")
+
+
+def test_registry_lookup_returns_isolated_mappings() -> None:
+    registry = get_registry("11Feb2026")
+    registry.supported_workflows["mutated"] = ("value",)
+    registry.citations["new"] = "https://example.com"
+
+    fresh_registry = get_registry("11Feb2026")
+
+    assert "mutated" not in fresh_registry.supported_workflows
+    assert "new" not in fresh_registry.citations
